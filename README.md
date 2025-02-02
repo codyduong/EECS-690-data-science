@@ -1,4 +1,4 @@
-# EECS 690 - Special Topics - Data Science
+# EECS 690 - Special Topics, Data Science
 
 Note that this course number is not necessarily representative of the difficulty of the course, it is simply a course
 that is not reguarly scheduled.
