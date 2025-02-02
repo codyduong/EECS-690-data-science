@@ -1,0 +1,18 @@
+[project]
+name = "mp1"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "altair>=5.5.0",
+    "numpy>=2.2.2",
+    "pandas>=2.2.3",
+]
+
+[dependency-groups]
+dev = [
+    "autopep8>=2.3.2",
+    "ipykernel>=6.29.5",
+    "jupyter>=1.1.1",
+]
