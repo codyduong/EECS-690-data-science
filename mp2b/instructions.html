@@ -1,0 +1,81 @@
+<div class="user_content enhanced" data-testid="assignments-2-assignment-toggle-details-text"><p><strong>EECS690 Mini-Project 2b: Reading Data from a Database</strong></p>
+  <p>Learning objectives: <span>In this project, you will learn how to</span></p>
+  <ul>
+  <li>Read data from a database using the <code>ibis</code> library</li>
+  <li>Visualize data using Altair</li>
+  </ul>
+  <p>All datasets for this mini-project are placed in the Canvas folder called <code>Data files</code>. The dataset for this mini-project is called <code>flights_filtered.db</code> and is from a case study investigating the reliability of flights into and out of Boston Logan International Airport (the case study is at the bottom).</p>
+  <p><strong>Tasks</strong></p>
+  <p><strong>1. Import ibis</strong></p>
+  <p><strong>2. Connect to the database</strong></p>
+  <p><strong>3. Create visualizations</strong></p>
+  <p><strong>Expected Deliverables</strong></p>
+  <p>A file named <code>foo.ipynb</code> where <code>foo</code> is your last name in lower case letters. Your program should be reading and writing the data files in relative folder <code>data/</code></p>
+  <p><strong>Grading Rubric</strong></p>
+  <p><span style="color: #e03e2d;">Reproduce the above code and output: <span style="color: #000000;">20 points</span></span></p>
+  <hr>
+  <p><strong>Coding Hints</strong></p>
+  <p>In order to open a database in Python, you need to take several steps:</p>
+  <p>1. Connect to the database. For an SQLite database, we will do that using the <code>connect</code> function from the <code>sqlite</code> backend in the <code>ibis</code> package. This command does not read in the data, but simply tells Python where the database is and opens up a communication channel that Python can use to send SQL commands to the database.</p>
+  <p>2. Check what tables (similar to pandas dataframes, Excel spreadsheets) are in the database using the <code>list_tables</code> function</p>
+  <p>3. Once you've picked a table, create a Python object for it using the <code>table</code> function from the <code>conn</code> object</p>
+  <p>4. You can then interact with this table using familiar commands like <code>head</code> or <code>[]</code> and don't forget to use <code>execute</code> to get back a pandas data frame</p>
+  <p>Some of the steps will be provided here.</p>
+  <p><span>Use the&nbsp;</span><code>connect</code><span>&nbsp;function from the&nbsp;</span><code>sqlite</code><span>&nbsp;backend in the&nbsp;</span><code>ibis</code><span>&nbsp;package to open and connect to the&nbsp;</span><code>flights_filtered.db</code><span>&nbsp;database in the&nbsp;</span><code>data</code><span>&nbsp;folder:</span></p>
+  <p><span><code>conn = ibis.sqlite.connect("data/flights_filtered.db")</code><br></span></p>
+  <p>Use the <code>list_tables</code> function to inspect the database stored in the engine to see what tables it contains. Make a new variable named <code>flights_table_name</code> that stores the name of the table with our data in it:</p>
+  <p><code>print(conn.list_tables())&nbsp;&nbsp;</code><br><code>flights_table_name = "bos_flights"</code></p>
+  <p>Use the table function from the <code>conn</code> object to create a Python reference to the table and call this <code>flight_data:</code></p>
+  <p><code>flight_data = conn.table(flights_table_name)</code><br><code>flight_data&nbsp;</code></p>
+  <p>The output should be as follows:</p>
+  <p><code>DatabaseTable: bos_flights</code><br><code>&nbsp; YEAR &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;int64</code><br><code>&nbsp; MONTH &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; int64</code><br><code>&nbsp; DAY &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; int64</code><br><code>&nbsp; DAY_OF_WEEK &nbsp; &nbsp; &nbsp; &nbsp; int64</code><br><code>&nbsp; ORIGIN_AIRPORT &nbsp; &nbsp; &nbsp;string</code><br><code>&nbsp; DESTINATION_AIRPORT string</code><br><code>&nbsp; DISTANCE &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;int64</code><br><code>&nbsp; SCHEDULED_DEPARTURE int64</code><br><code>&nbsp; DEPARTURE_DELAY &nbsp; &nbsp; float64</code><br><code>&nbsp; SCHEDULED_ARRIVAL &nbsp; int64</code><br><code>&nbsp; ARRIVAL_DELAY &nbsp; &nbsp; &nbsp; float64</code><br><code>&nbsp; DIVERTED &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;int64</code><br><code>&nbsp; CANCELLED &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; int64</code></p>
+  <p>Now that we've connected to the database and created an pandas dataframe object, we'll take a look at the first few rows and columns of the flight on-time performance data. So let's try using the <code>head</code> function (which allows us to see the first few rows of a dataset) and see what happens:</p>
+  <p><code>flight_data.head()</code></p>
+  <p>The output should look like the following:</p>
+  <p><code>r0 := DatabaseTable: bos_flights</code><br><code>&nbsp; YEAR &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;int64</code><br><code>&nbsp; MONTH &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; int64</code><br><code>&nbsp; DAY &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; int64</code><br><code>&nbsp; DAY_OF_WEEK &nbsp; &nbsp; &nbsp; &nbsp; int64</code><br><code>&nbsp; ORIGIN_AIRPORT &nbsp; &nbsp; &nbsp;string</code><br><code>&nbsp; DESTINATION_AIRPORT string</code><br><code>&nbsp; DISTANCE &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;int64</code><br><code>&nbsp; SCHEDULED_DEPARTURE int64</code><br><code>&nbsp; DEPARTURE_DELAY &nbsp; &nbsp; float64</code><br><code>&nbsp; SCHEDULED_ARRIVAL &nbsp; int64</code><br><code>&nbsp; ARRIVAL_DELAY &nbsp; &nbsp; &nbsp; float64</code><br><code>&nbsp; DIVERTED &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;int64</code><br><code>&nbsp; CANCELLED &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; int64</code></p>
+  <p><code>Limit[r0, n=5]</code></p>
+  <p>When we write&nbsp;<code>flight_data.head().execute()</code>&nbsp;in Python, in the background, the&nbsp;<code>execute</code> function is translating the Python code into SQL, sending that SQL to the database, and then translating the response for us:</p>
+  <p><code>flight_data.head().execute()</code></p>
+  <p>The output should look like the following:</p>
+  <p><img id="13002945" src="./docs/7-flight-head-execute.png" alt="7-flight-head-execute.png"></p>
+  <p>&nbsp;</p>
+  <p><code><span id="placeholder-0" class="mceNonEditable" style="display: inline-flex;" aria-label="Loading placeholder for 7-flight-head-execute.png" data-placeholder-for="7-flight-head-execute.png"></span><br></code></p>
+  <p>Use <code>[] </code>to extract the arrival and departure delay columns for rows where the origin airport is BOS. This is done in two steps, first we filter rows and second, select columns:</p>
+  <p><code>fd_bos_origin = flight_data[flight_data["ORIGIN_AIRPORT"] == "BOS"].execute()</code><br><code>delay_data = fd_bos_origin[["ARRIVAL_DELAY", "DEPARTURE_DELAY"]]</code></p>
+  <p>Take a look at <code>delay_data</code> to make sure it has the two columns we expect. The output should be as follows:</p>
+  <p><img src="./docs/8-delay-dta.png" alt="8-delay-dta.png" width="320" height="182"></p>
+  <p>Our next task is to visualize our data to see whether there is a difference in delays for arrivals at and departures from <code>BOS</code>. But before we do that, let's figure out just how much data we're working with using the shape method.</p>
+  <p><code>delay_data.shape</code></p>
+  <p>The output should be: <code>(104804, 2)</code></p>
+  <p>Plot the arrival delay time data as a histogram. You will plot the delay (in hours) separated into 15-minute-wide bins on the x-axis. The y-axis will show the percentage of flights departing BOS that had that amount of delay during 2015.</p>
+  <p><code>delay_data = delay_data.assign(</code><br><code>&nbsp; &nbsp; ARRIVAL_DELAY_hr=delay_data["ARRIVAL_DELAY"] / 60</code><br><code>)</code><br><code>arrival_delay_plot = alt.Chart(delay_data).transform_joinaggregate(</code><br><code>&nbsp; &nbsp; total="count(ARRIVAL_DELAY_hr)"</code><br><code>).transform_calculate(</code><br><code>&nbsp; &nbsp; pct="1 / datum.total"</code><br><code>).mark_bar().encode(</code><br><code>&nbsp; &nbsp; alt.X("ARRIVAL_DELAY_hr:Q")</code><br><code>&nbsp; &nbsp; &nbsp; &nbsp; .bin(step=0.25, extent=[-2, 5])</code><br><code>&nbsp; &nbsp; &nbsp; &nbsp; .title("Delay (hours)"),</code><br><code>&nbsp; &nbsp; alt.Y("sum(pct):Q")</code><br><code>&nbsp; &nbsp; &nbsp; &nbsp; .axis(format="%")</code><br><code>&nbsp; &nbsp; &nbsp; &nbsp; .title("% of Flights")</code><br><code>)</code></p>
+  <p>The output should look like the following:</p>
+  <p><img id="13003038" src="./docs/9-delay-chart.png" alt="9-delay-chart.png" width="320" height="301"></p>
+  <p>Plot the departure delay time data as a histogram with the same format as the previous plot. Hint: copy and paste your code from the previous block! The only thing that will change is the column from <code>delay_data</code> that you use for the x-axis:</p>
+  <p><code>delay_data = delay_data.assign(</code><br><code>&nbsp; &nbsp; DEPARTURE_DELAY_hr = delay_data["DEPARTURE_DELAY"] / 60</code><br><code>)</code></p>
+  <p><code>departure_delay_plot = alt.Chart(delay_data).transform_joinaggregate(</code><br><code>&nbsp; &nbsp; total="count(DEPARTURE_DELAY_hr)"</code><br><code>).transform_calculate(</code><br><code>&nbsp; &nbsp; pct="1 / datum.total"</code><br><code>).mark_bar().encode(</code><br><code>&nbsp; &nbsp; alt.X("DEPARTURE_DELAY_hr:Q")</code><br><code>&nbsp; &nbsp; &nbsp; &nbsp; .bin(step=0.25, extent=[-2, 5])</code><br><code>&nbsp; &nbsp; &nbsp; &nbsp; .title("Delay (hours)"),</code><br><code>&nbsp; &nbsp; alt.Y("sum(pct):Q")</code><br><code>&nbsp; &nbsp; &nbsp; &nbsp; .axis(format="%")</code><br><code>&nbsp; &nbsp; &nbsp; &nbsp; .title("% of Flights")</code><br><code>)</code><br><code>departure_delay_plot</code></p>
+  <p>The output should look like the following:</p>
+  <p><img id="13003106" src="./docs/10-departure-delay.png" alt="10-departure-delay.png" width="320" height="303"></p>
+  <p>Use the <code>to_csv</code> method to write the dataframe to a file called <code>delay_data.csv</code>. Save the file in the <code>data/</code> folder and specify <code>index=False</code> to avoid including the numerical index in the file:</p>
+  <p><code>delay_data.to_csv("data/delay_data.csv", index=False)</code></p>
+  <p>&nbsp;</p>
+  <hr>
+  <p><span style="color: #236fa1;"><strong>Investigating the reliability of flights into and out of Boston Logan International Airport</strong></span></p>
+  <p><span style="color: #236fa1;">Delays and cancellations seem to be an unavoidable risk of air travel. A missed connection, or hours spent waiting at the departure gate, might make you wonder, though: how reliable is air travel, really?</span></p>
+  <p><span style="color: #236fa1;">The US Bureau of Transportation Statistics keeps a continually-updated Airline On-Time Performance Dataset that has tracked the scheduled and actual departure / arrival time of flights in the United States from 1987 to the present day. In this section, we'll do some exploration of this data to try to answer some of the above questions. The actual data we'll be using was from only the year 2015, and was compiled into the 2015 Kaggle Flight Delays Dataset from the raw Bureau data. But even that dataset is too large to handle in this course (5.8 million flights in just one year!), so the data have been filtered down to flights that either depart or arrive at Logan International Airport (BOS), resulting in around 209,000 flight records.</span></p>
+  <p><span style="color: #236fa1;">Our data has the following variables (columns):</span></p>
+  <ul>
+  <li><span style="color: #236fa1;">year</span></li>
+  <li><span style="color: #236fa1;">month</span></li>
+  <li><span style="color: #236fa1;">day</span></li>
+  <li><span style="color: #236fa1;">day of the week (from 1 - 7.999..., with fractional days based on departure time)</span></li>
+  <li><span style="color: #236fa1;">origin airport code</span></li>
+  <li><span style="color: #236fa1;">destination airport code</span></li>
+  <li><span style="color: #236fa1;">flight distance (miles)</span></li>
+  <li><span style="color: #236fa1;">scheduled departure time (local)</span></li>
+  <li><span style="color: #236fa1;">departure delay (minutes)</span></li>
+  <li><span style="color: #236fa1;">scheduled arrival time (local)</span></li>
+  <li><span style="color: #236fa1;">arrival delay (minutes)</span></li>
+  <li><span style="color: #236fa1;">diverted? (True/False)</span></li>
+  <li><span style="color: #236fa1;">cancelled? (True/False)</span></li>
+  </ul></div>

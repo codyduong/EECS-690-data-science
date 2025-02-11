@@ -11,6 +11,8 @@ The course is primarily an adaptation of the textbooks:
 
 ## Grades
 
-| Lab     | Grade |
-| ------- | ----- |
-| Mini Project 1: Using Pandas and Altair | 
+| Mini-Project                                | Grade |
+| ------------------------------------------- | ----- |
+| [1: Using Pandas and Altair](./mp1)         |       |
+| [2a: Reading Data](./mp2a/)                 |       |
+| [2b: Reading Data from a Database](./mp2b/) |       |
